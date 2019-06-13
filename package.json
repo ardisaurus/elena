@@ -1,7 +1,7 @@
 {
   "name": "elena",
   "version": "1.0.0",
-  "description": "Elo rating algorithm based app build on NuxtJS",
+  "description": "Elo rating algorithm based poll app builded on NuxtJS",
   "author": "ardisaurus",
   "private": true,
   "scripts": {
@@ -11,10 +11,15 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.3.6",
+    "axios": "^0.19.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "cross-env": "^5.2.0",
-    "nuxt": "^2.4.0",
     "express": "^4.16.4",
-    "@nuxtjs/axios": "^5.3.6"
+    "mongoose": "^5.5.12",
+    "multer": "^1.4.1",
+    "nuxt": "^2.4.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.9"

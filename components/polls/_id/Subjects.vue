@@ -1,0 +1,137 @@
+<template>
+  <div>
+    <table>
+      <caption>Subjects</caption>
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Images</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="subject in subjects" :key="subject._id">
+          <td scope="row">{{ subject._id }}</td>
+          <td v-if="subject._id!=markedId">{{ subject.subjectName }}</td>
+          <td v-if="subject._id==markedId">
+            <input type="text" name="name" v-model="subjectName">
+          </td>
+          <td v-if="subject._id!=markedId">{{ subject.description }}</td>
+          <td v-if="subject._id==markedId">
+            <input type="text" name="description" v-model="description">
+          </td>
+          <td>
+            <img :src="getImgUrl(subject.images)" v-bind:alt="subject.images">
+          </td>
+          <td v-if="subject._id!=markedId">
+            <button @click="deleteClick(subject._id)">Delete</button>
+            <button @click="marking(subject._id, subject.subjectName, subject.description)">Edit</button>
+          </td>
+          <td v-if="subject._id==markedId">
+            <button @click="update">Save</button>
+            <button @click="marking(subject._id, subject.subjectName)">Cancel</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script>
+import { mapActions, mapGetters } from "vuex";
+export default {
+  name: "Subjects",
+  data() {
+    return {
+      markedId: "",
+      subjectName: "",
+      description: "",
+      pic: "1560095388078.jpg"
+    };
+  },
+  computed: {
+    ...mapGetters({
+      subjects: "polls/subjects"
+    })
+  },
+  methods: {
+    ...mapActions({
+      fetchSubjects: "polls/fetchSubjects",
+      deleteSubject: "polls/deleteSubject",
+      updateSubject: "polls/updateSubject"
+    }),
+    marking(_id, name, description) {
+      if (this.markedId == _id) {
+        this.markedId = "";
+        this.subjectName = "";
+        this.description = "";
+      } else {
+        this.markedId = _id;
+        this.subjectName = name;
+        this.description = description;
+      }
+    },
+    deleteClick(subjectId) {
+      const payload = { pollsId: this.$route.params.id, subjectId };
+      this.deleteSubject(payload);
+    },
+    update(e) {
+      e.preventDefault();
+      const payload = {
+        pollsId: this.$route.params.id,
+        subjectId: this.markedId,
+        subjectName: this.subjectName,
+        description: this.description
+      };
+      this.updateSubject(payload);
+      this.markedId = "";
+      this.subjectName = "";
+      this.description = "";
+    },
+    getImgUrl(pic) {
+      return require(`../../../server/uploads/${pic}`);
+    }
+  },
+  created() {
+    this.fetchSubjects(this.$route.params.id);
+  }
+};
+</script>
+
+<style>
+table {
+  width: 100%;
+  margin: 10px auto;
+}
+
+caption {
+  font-size: 1.6em;
+  font-weight: 400;
+  padding: 10px 0;
+}
+
+thead th {
+  font-weight: 400;
+  background: #41b883;
+  color: #fff;
+}
+
+tr {
+  background: #f4f7f8;
+  border-bottom: 1px solid #fff;
+  margin-bottom: 5px;
+}
+
+tr:nth-child(even) {
+  background: #e8eeef;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 20px;
+  font-weight: 300;
+}
+</style>
