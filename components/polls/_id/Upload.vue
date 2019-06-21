@@ -1,10 +1,12 @@
 <template>
   <div class="file">
-    <form @submit.prevent="onSubmit" enctype="multipart/form-data">
+    <form
+      @submit.prevent="onSubmit"
+      enctype="multipart/form-data"
+      v-if="subject.images=='noimage.jpg'"
+    >
       <div class="fields">
-        <label>Upload File</label>
-        <br>
-        <input type="file" ref="file" @change="onSelect">
+        <input type="file" id="file" ref="file" @change="onSelect">
       </div>
       <div class="fields">
         <button>Submit</button>
@@ -18,6 +20,7 @@
 import axios from "axios";
 export default {
   name: "FileUpload",
+  props: ["subject"],
   data() {
     return {
       file: "",
@@ -39,14 +42,14 @@ export default {
     async onSubmit() {
       const formData = new FormData();
       formData.append("file", this.file);
-      formData.append("subjectId", "5cfd2a04194cf724d7b5ef4e");
-      formData.append("pollsId", "5cfa3d60a58c39298251baa9");
+      formData.append("subjectId", this.subject._id);
+      formData.append("pollsId", this.$route.params.id);
       try {
         const response = await axios.post(
           "http://localhost:3000/api/polls/upload/",
           formData
         );
-        this.message = response.data;
+        this.message = "Upload Success";
       } catch (err) {
         console.log(err);
         this.message = err.response.data.error;

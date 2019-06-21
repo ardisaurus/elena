@@ -37,7 +37,6 @@ export const actions = {
       `http://${host}:${port}/api/polls/subject/${payload.pollId}`,
       {
         subjectName: payload.subjectName,
-        images: "",
         description: payload.description
       }
     );
@@ -67,7 +66,19 @@ export const actions = {
       `http://${host}:${port}/api/polls/subject/${payload.pollsId}/put/${
         payload.subjectId
       }`,
-      { subjectName: payload.subjectName, description: payload.description }
+      {
+        subjectName: payload.subjectName,
+        images: payload.images,
+        description: payload.description
+      }
+    );
+    commit("updateSubject", response.data);
+  },
+  async removeImageSubject({ commit }, payload) {
+    const response = await axios.put(
+      `http://${host}:${port}/api/polls/subject/${
+        payload.pollsId
+      }/removeimage/${payload.subjectId}`
     );
     commit("updateSubject", response.data);
   }

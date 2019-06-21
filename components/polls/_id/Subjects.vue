@@ -1,5 +1,6 @@
 <template>
   <div>
+    <nuxt-link :to="`${$route.params.id}/mash`">Mash</nuxt-link>
     <table>
       <caption>Subjects</caption>
       <thead>
@@ -22,15 +23,28 @@
           <td v-if="subject._id==markedId">
             <input type="text" name="description" v-model="description">
           </td>
-          <td>
-            <img :src="getImgUrl(subject.images)" v-bind:alt="subject.images">
+          <td v-if="subject._id!=markedId" style="text-align: center;">
+            <img
+              v-if="subject.images.length>0"
+              :src="getImgUrl(subject.images)"
+              v-bind:alt="subject.images"
+            >
+          </td>
+          <td v-if="subject._id==markedId">
+            <button v-if="subject.images!='noimage.jpg'" @click="removeImage">Remove</button>
+            <file-upload :subject="subject"/>
           </td>
           <td v-if="subject._id!=markedId">
             <button @click="deleteClick(subject._id)">Delete</button>
-            <button @click="marking(subject._id, subject.subjectName, subject.description)">Edit</button>
+            <button
+              @click="marking(subject._id, subject.subjectName, subject.images, subject.description)"
+            >Edit</button>
           </td>
           <td v-if="subject._id==markedId">
-            <button @click="update">Save</button>
+            <button
+              @click="update"
+              v-if="subject.subjectName!=subjectName||subject.description!=description"
+            >Save</button>
             <button @click="marking(subject._id, subject.subjectName)">Cancel</button>
           </td>
         </tr>
@@ -40,15 +54,19 @@
 </template>
 
 <script>
+import FileUpload from "../../polls/_id/Upload";
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Subjects",
+  components: {
+    FileUpload
+  },
   data() {
     return {
       markedId: "",
       subjectName: "",
-      description: "",
-      pic: "1560095388078.jpg"
+      images: "",
+      description: ""
     };
   },
   computed: {
@@ -60,16 +78,19 @@ export default {
     ...mapActions({
       fetchSubjects: "polls/fetchSubjects",
       deleteSubject: "polls/deleteSubject",
-      updateSubject: "polls/updateSubject"
+      updateSubject: "polls/updateSubject",
+      removeImageSubject: "polls/removeImageSubject"
     }),
-    marking(_id, name, description) {
+    marking(_id, name, images, description) {
       if (this.markedId == _id) {
         this.markedId = "";
         this.subjectName = "";
+        this.images = "";
         this.description = "";
       } else {
         this.markedId = _id;
         this.subjectName = name;
+        this.images = images;
         this.description = description;
       }
     },
@@ -83,15 +104,44 @@ export default {
         pollsId: this.$route.params.id,
         subjectId: this.markedId,
         subjectName: this.subjectName,
+        images: this.images,
         description: this.description
       };
       this.updateSubject(payload);
       this.markedId = "";
       this.subjectName = "";
+      this.images = "";
       this.description = "";
     },
     getImgUrl(pic) {
       return require(`../../../server/uploads/${pic}`);
+    },
+    update(e) {
+      e.preventDefault();
+      const payload = {
+        pollsId: this.$route.params.id,
+        subjectId: this.markedId,
+        subjectName: this.subjectName,
+        images: this.images,
+        description: this.description
+      };
+      this.updateSubject(payload);
+      this.markedId = "";
+      this.subjectName = "";
+      this.images = "";
+      this.description = "";
+    },
+    removeImage(e) {
+      e.preventDefault();
+      const payload = {
+        pollsId: this.$route.params.id,
+        subjectId: this.markedId
+      };
+      this.removeImageSubject(payload);
+      this.markedId = "";
+      this.subjectName = "";
+      this.images = "";
+      this.description = "";
     }
   },
   created() {
@@ -133,5 +183,8 @@ td {
   text-align: left;
   padding: 20px;
   font-weight: 300;
+}
+img {
+  width: 100px;
 }
 </style>

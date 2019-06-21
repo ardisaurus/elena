@@ -23,6 +23,28 @@ Router.get("/subject/:id", function(req, res, next) {
     }
   });
 });
+Router.get("/subject/mashes/:id", function(req, res, next) {
+  Poll.findById(req.params.id, function(err, poll) {
+    if (!poll) res.status(404).send("Data is not found");
+    else {
+      // poll.subject = poll.subject.map(obj => ({ ...obj, point: 1 }));
+      let mashes = [];
+      let a = 0;
+      let b = a + 1;
+      let x = poll.subject.length;
+      let y = x ** 2 - (x ** 2 / 2 + x / 2);
+      for (let i = 0; i < y; i++) {
+        mashes[i] = { subjecta: poll.subject[a], subjectb: poll.subject[b] };
+        if (b == x - 1) {
+          b = a + 1;
+          a = a + 1;
+        }
+        b = b + 1;
+      }
+      res.json(mashes);
+    }
+  });
+});
 Router.post("/", function(req, res, next) {
   Poll.create(req.body)
     .then(function(result) {
@@ -34,7 +56,7 @@ Router.post("/subject/:id", function(req, res, next) {
   Poll.findById(req.params.id, function(err, poll) {
     if (!poll) res.status(404).send("Data is not found");
     else {
-      poll.subject.push(req.body);
+      poll.subject.push({ ...req.body, images: "noimage.jpg" });
       poll
         .save()
         .then(function(result) {
@@ -67,6 +89,7 @@ Router.put("/subject/:id/put/:id2", function(req, res, next) {
         poll.subject.splice(index, 1, {
           _id: req.params.id2,
           subjectName: req.body.subjectName,
+          images: req.body.images,
           description: req.body.description
         });
         poll
@@ -84,16 +107,69 @@ Router.put("/subject/:id/put/:id2", function(req, res, next) {
     }
   });
 });
-Router.delete("/:id", function(req, res, next) {
+Router.put("/subject/:id/removeimage/:id2", function(req, res, next) {
+  Poll.findById(req.params.id, async function(err, poll) {
+    if (!poll) res.status(404).send("Data is not found");
+    else {
+      const index = poll.subject.findIndex(
+        subject => subject._id == req.params.id2
+      );
+      if (index !== -1) {
+        await unlinkAsync("server/uploads/" + poll.subject[index].images);
+        poll.subject.splice(index, 1, {
+          _id: req.params.id2,
+          subjectName: poll.subject[index].subjectName,
+          images: "noimage.jpg",
+          description: poll.subject[index].description
+        });
+        poll
+          .save()
+          .then(function(result) {
+            const index = result.subject.findIndex(
+              subject => subject._id == req.params.id2
+            );
+            res.json(result.subject[index]);
+          })
+          .catch(() => res.status(400).send("Unable to update data"));
+      } else {
+        res.status(400).send("Unable to update data");
+      }
+    }
+  });
+});
+Router.delete("/:id", async function(req, res, next) {
+  await Poll.findById(req.params.id, async function(err, poll) {
+    if (!poll) res.status(404).send("Data is not found");
+    else {
+      const subjectLen = poll.subject.length;
+      if (subjectLen > 0) {
+        for (let index = 0; index < subjectLen; index++) {
+          if (poll.subject[index].images != "noimage.jpg") {
+            await unlinkAsync("server/uploads/" + poll.subject[index].images);
+          }
+        }
+      }
+    }
+  });
   Poll.findOneAndDelete({ _id: req.params.id }, function(err) {
     if (err) res.json(err);
     else res.send("Unable delete data");
   });
 });
 Router.delete("/subject/:id/delete/:id2", function(req, res, next) {
-  Poll.findById(req.params.id, function(err, poll) {
+  Poll.findById(req.params.id, async function(err, poll) {
     if (!poll) res.status(404).send("Data is not found");
     else {
+      const index = poll.subject.findIndex(
+        subject => subject._id == req.params.id2
+      );
+      if (index !== -1) {
+        if (poll.subject[index].images != "noimage.jpg") {
+          await unlinkAsync("server/uploads/" + poll.subject[index].images);
+        }
+      } else {
+        res.status(400).send("Unable to update data");
+      }
       poll.subject = poll.subject.filter(
         subject => subject._id != req.params.id2
       );
@@ -125,12 +201,44 @@ var storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname)); //Appending extension
   }
 });
+
+const fs = require("fs");
+const { promisify } = require("util");
+
+const unlinkAsync = promisify(fs.unlink);
+
 const upload = multer({
   fileFilter,
   limits: {
     fileSize: 20000000
   },
-  storage
+  storage,
+  //Shitty way to prevent upload if id not found
+  onFileUploadStart: function(file, req, res) {
+    if (!poll) return false;
+    else {
+      const index = poll.subject.findIndex(
+        subject => subject._id == req.body.subjectId
+      );
+      if (index !== -1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
+  onFileUploadComplete: async function(file, req, res) {
+    if (!poll) await unlinkAsync(req.file.path);
+    else {
+      const index = poll.subject.findIndex(
+        subject => subject._id == req.body.subjectId
+      );
+      if (index !== -1) {
+      } else {
+        await unlinkAsync(req.file.path);
+      }
+    }
+  }
 });
 
 Router.post("/upload", upload.single("file"), (req, res) => {
