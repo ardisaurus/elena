@@ -56,7 +56,7 @@ Router.post("/subject/:id", function(req, res, next) {
   Poll.findById(req.params.id, function(err, poll) {
     if (!poll) res.status(404).send("Data is not found");
     else {
-      poll.subject.push({ ...req.body, images: "noimage.jpg" });
+      poll.subject.push({ ...req.body, images: "" });
       poll
         .save()
         .then(function(result) {
@@ -119,7 +119,7 @@ Router.put("/subject/:id/removeimage/:id2", function(req, res, next) {
         poll.subject.splice(index, 1, {
           _id: req.params.id2,
           subjectName: poll.subject[index].subjectName,
-          images: "noimage.jpg",
+          images: "",
           description: poll.subject[index].description
         });
         poll
@@ -144,7 +144,7 @@ Router.delete("/:id", async function(req, res, next) {
       const subjectLen = poll.subject.length;
       if (subjectLen > 0) {
         for (let index = 0; index < subjectLen; index++) {
-          if (poll.subject[index].images != "noimage.jpg") {
+          if (poll.subject[index].images != "") {
             await unlinkAsync("server/uploads/" + poll.subject[index].images);
           }
         }
@@ -164,7 +164,7 @@ Router.delete("/subject/:id/delete/:id2", function(req, res, next) {
         subject => subject._id == req.params.id2
       );
       if (index !== -1) {
-        if (poll.subject[index].images != "noimage.jpg") {
+        if (poll.subject[index].images != "") {
           await unlinkAsync("server/uploads/" + poll.subject[index].images);
         }
       } else {

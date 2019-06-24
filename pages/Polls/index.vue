@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h3>Polls</h3>
     <Addpoll/>
     <Polls/>
   </div>

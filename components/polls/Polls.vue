@@ -1,7 +1,6 @@
 <template>
   <div>
     <table>
-      <caption>Polls</caption>
       <thead>
         <tr>
           <th scope="col">Id</th>
@@ -76,7 +75,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 table {
   width: 100%;
   margin: 10px auto;

@@ -1,10 +1,6 @@
 <template>
   <div class="file">
-    <form
-      @submit.prevent="onSubmit"
-      enctype="multipart/form-data"
-      v-if="subject.images=='noimage.jpg'"
-    >
+    <form @submit.prevent="onSubmit" enctype="multipart/form-data" v-if="subject.images.length<1">
       <div class="fields">
         <input type="file" id="file" ref="file" @change="onSelect">
       </div>

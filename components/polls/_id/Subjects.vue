@@ -2,7 +2,6 @@
   <div>
     <nuxt-link :to="`${$route.params.id}/mash`">Mash</nuxt-link>
     <table>
-      <caption>Subjects</caption>
       <thead>
         <tr>
           <th scope="col">Id</th>
@@ -24,14 +23,10 @@
             <input type="text" name="description" v-model="description">
           </td>
           <td v-if="subject._id!=markedId" style="text-align: center;">
-            <img
-              v-if="subject.images.length>0"
-              :src="getImgUrl(subject.images)"
-              v-bind:alt="subject.images"
-            >
+            <img :src="getImgUrl(subject.images)" v-bind:alt="subject.images">
           </td>
           <td v-if="subject._id==markedId">
-            <button v-if="subject.images!='noimage.jpg'" @click="removeImage">Remove</button>
+            <button v-if="subject.images.length>0" @click="removeImage">Remove</button>
             <file-upload :subject="subject"/>
           </td>
           <td v-if="subject._id!=markedId">
@@ -114,7 +109,11 @@ export default {
       this.description = "";
     },
     getImgUrl(pic) {
-      return require(`../../../server/uploads/${pic}`);
+      if (pic.length < 1) {
+        return require(`../../../assets/img/noimage.jpg`);
+      } else {
+        return require(`../../../server/uploads/${pic}`);
+      }
     },
     update(e) {
       e.preventDefault();
@@ -150,7 +149,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 table {
   width: 100%;
   margin: 10px auto;

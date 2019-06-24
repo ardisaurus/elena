@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h3>Subjects</h3>
     <AddSubject/>
     <Subjects/>
   </div>

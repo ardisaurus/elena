@@ -3,25 +3,30 @@
     {{turn+1}}/{{mashes.length}}
     <div v-bind:key="index" v-for="(mash, index) in mashes">
       <transition mode="out-in">
-        <MashItem
-          v-if="index == turn"
-          v-bind:mash="mash"
-          v-bind:index="index"
-          v-on:selectA="$emit('selectA', index)"
-          v-on:selectB="$emit('selectB', index)"
-        />
+        <table v-if="index==turn">
+          <tr style="text-align:center">
+            <td>
+              <div v-on:click="$emit('selectA', index)">
+                <p>{{mash.subjecta.subjectName}}</p>
+                <img style="width:200px" :src="getImgUrl(mash.subjecta.images)">
+              </div>
+            </td>
+            <td>
+              <div v-on:click="$emit('selectB', index)">
+                <p>{{mash.subjectb.subjectName}}</p>
+                <img style="width:200px" :src="getImgUrl(mash.subjectb.images)">
+              </div>
+            </td>
+          </tr>
+        </table>
       </transition>
     </div>
   </div>
 </template>
 
 <script>
-import MashItem from "./MashItem.vue";
 export default {
   name: "Mashes",
-  components: {
-    MashItem
-  },
   props: ["mashes", "turn"],
   created() {
     for (var i = this.mashes.length - 1; i > 0; i--) {
@@ -30,19 +35,19 @@ export default {
       this.mashes[i] = this.mashes[j];
       this.mashes[j] = temp;
     }
+  },
+  methods: {
+    getImgUrl(pic) {
+      if (pic.length < 1) {
+        return require(`../../../../assets/img/noimage.jpg`);
+      } else {
+        return require(`../../../../server/uploads/${pic}`);
+      }
+    }
   }
 };
 </script>
 <style scoped>
-/* .v-leave {
-  opacity: 1;
-}
-.v-leave-active {
-  transition: opacity 2s;
-}
-.v-leave-to {
-  opacity: 0;
-} */
 .v-enter {
   opacity: 0;
 }

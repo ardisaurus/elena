@@ -8,9 +8,11 @@
         v-on:selectA="selectA"
         v-on:selectB="selectB"
       />
-      <transition name="slide-fade">
-        <Subs class="ranking" v-if="turn==mashes.length" v-bind:orderedSubs="orderedSubs"/>
-      </transition>
+      <Subs
+        class="ranking"
+        v-if="turn==mashes.length && mashes.length!=0"
+        v-bind:orderedSubs="orderedSubs"
+      />
     </div>
   </div>
 </template>
@@ -49,7 +51,7 @@ export default {
       val: eloRating(1200, 1000, 30, true)
     };
   },
-  beforeMount() {
+  created() {
     axios
       .get(`http://127.0.0.1:3000/api/polls/subject/${this.$route.params.id}`)
       .then(res => (this.subs = res.data.map(obj => ({ ...obj, point: 1400 }))))

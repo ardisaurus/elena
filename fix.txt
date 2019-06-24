@@ -1,1 +1,2 @@
-fix api get mashes
+create store for mash
+save mash result
