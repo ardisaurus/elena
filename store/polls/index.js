@@ -85,7 +85,7 @@ export const actions = {
 };
 export const mutations = {
   setPolls: (state, polls) => (state.polls = polls),
-  newPoll: (state, poll) => state.polls.unshift(poll),
+  newPoll: (state, poll) => state.polls.push(poll),
   removePoll: (state, _id) =>
     (state.polls = state.polls.filter(poll => poll._id !== _id)),
   updatePoll: (state, updPoll) => {
@@ -95,7 +95,7 @@ export const mutations = {
     }
   },
   setSubjects: (state, subjects) => (state.subjects = subjects),
-  newSubject: (state, subject) => state.subjects.unshift(subject),
+  newSubject: (state, subject) => state.subjects.push(subject),
   removeSubject: (state, _id) =>
     (state.subjects = state.subjects.filter(subject => subject._id !== _id)),
   updateSubject: (state, updSubject) => {

@@ -22,12 +22,20 @@
           <td v-if="subject._id==markedId">
             <input type="text" name="description" v-model="description">
           </td>
-          <td v-if="subject._id!=markedId" style="text-align: center;">
-            <img :src="getImgUrl(subject.images)" v-bind:alt="subject.images">
-          </td>
-          <td v-if="subject._id==markedId">
-            <button v-if="subject.images.length>0" @click="removeImage">Remove</button>
-            <file-upload :subject="subject"/>
+          <td style="text-align: center;">
+            <img
+              v-if="subject._id!=markedId && subject.images.length<1 || subject.images.length>0"
+              :src="getImgUrl(subject.images)"
+              v-bind:alt="subject.images"
+            >
+            <button
+              v-if="subject._id==markedId && subject.images.length>0"
+              @click="removeImage"
+            >Remove</button>
+            <file-upload
+              v-if="subject._id==markedId && subject.images.length<1"
+              :subject="subject"
+            />
           </td>
           <td v-if="subject._id!=markedId">
             <button @click="deleteClick(subject._id)">Delete</button>

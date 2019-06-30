@@ -8,11 +8,7 @@
         v-on:selectA="selectA"
         v-on:selectB="selectB"
       />
-      <Subs
-        class="ranking"
-        v-if="turn==mashes.length && mashes.length!=0"
-        v-bind:orderedSubs="orderedSubs"
-      />
+      <Subs v-if="turn==mashes.length && mashes.length!=0" v-bind:orderedSubs="orderedSubs"/>
     </div>
   </div>
 </template>
@@ -20,110 +16,78 @@
 <script>
 import Mashes from "../../../../components/polls/_id/mashes/Mashes";
 import Subs from "../../../../components/polls/_id/mashes/Subs";
-import axios from "axios";
-var probability = function(rating1, rating2) {
-  return (1.0 * 1.0) / (1 + 1.0 * 10 ** ((1.0 * (rating1 - rating2)) / 400));
-};
-var eloRating = function(Ra, Rb, K, d) {
-  let Pb = probability(Ra, Rb);
-  let Pa = probability(Rb, Ra);
-  if (d == true) {
-    Ra = Ra + K * (1 - Pa);
-    Rb = Rb + K * (0 - Pb);
-  } else {
-    Ra = Ra + K * (0 - Pa);
-    Rb = Rb + K * (1 - Pb);
-  }
-  var val = [Ra, Rb];
-  return val;
-};
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "App",
   components: {
     Mashes,
     Subs
   },
-  data() {
-    return {
-      mashes: [],
-      subs: [],
-      turn: 0,
-      val: eloRating(1200, 1000, 30, true)
-    };
-  },
   created() {
-    axios
-      .get(`http://127.0.0.1:3000/api/polls/subject/${this.$route.params.id}`)
-      .then(res => (this.subs = res.data.map(obj => ({ ...obj, point: 1400 }))))
-      // eslint-disable-next-line
-      .catch(err => console.log(err));
-    axios
-      .get(
-        `http://127.0.0.1:3000/api/polls/subject/mashes/${
-          this.$route.params.id
-        }`
-      )
-      .then(res => (this.mashes = res.data))
-      // eslint-disable-next-line
-      .catch(err => console.log(err));
+    this.fetchSubs(this.$route.params.id);
+    this.fetchMashes(this.$route.params.id);
   },
   computed: {
+    ...mapGetters({
+      subs: "mash/subs",
+      mashes: "mash/mashes",
+      turn: "mash/turn"
+    }),
     orderedSubs: function() {
       return this.subs.slice().sort(function(a, b) {
         return b.point - a.point;
       });
     }
   },
+
   methods: {
+    ...mapActions({
+      fetchSubs: "mash/fetchSubs",
+      fetchMashes: "mash/fetchMashes",
+      selectAn: "mash/selectA",
+      selectBn: "mash/selectB"
+    }),
     selectA(index) {
-      this.turn++;
-      let poina = 0;
-      let poinb = 0;
-      for (let i = 0; i < this.subs.length; i++) {
-        if (this.subs[i]._id == this.mashes[index].subjecta._id) {
-          poina = this.subs[i].point;
-        }
-        if (this.subs[i]._id == this.mashes[index].subjectb._id) {
-          poinb = this.subs[i].point;
-        }
-      }
-      var eloVal = eloRating(poina, poinb, 30, true);
-      for (let i = 0; i < this.subs.length; i++) {
-        if (this.subs[i]._id == this.mashes[index].subjecta._id) {
-          this.subs[i].point = eloVal[0];
-        }
-        if (this.subs[i]._id == this.mashes[index].subjectb._id) {
-          this.subs[i].point = eloVal[1];
-        }
-      }
+      // this.turn++;
+      // const indexa = this.subs.findIndex(
+      //   subject => subject._id == this.mashes[index].subjecta._id
+      // );
+      // const indexb = this.subs.findIndex(
+      //   subject => subject._id == this.mashes[index].subjectb._id
+      // );
+      // var eloVal = eloRating(
+      //   this.subs[indexa].point,
+      //   this.subs[indexb].point,
+      //   30,
+      //   true
+      // );
+      // this.subs[indexa].point = eloVal[0];
+      // this.subs[indexb].point = eloVal[1];
+      this.selectAn(index);
     },
     selectB(index) {
-      this.turn++;
-      let poina = 0;
-      let poinb = 0;
-      for (let i = 0; i < this.subs.length; i++) {
-        if (this.subs[i]._id == this.mashes[index].subjecta._id) {
-          poina = this.subs[i].point;
-        }
-        if (this.subs[i]._id == this.mashes[index].subjectb._id) {
-          poinb = this.subs[i].point;
-        }
-      }
-      var eloVal = eloRating(poina, poinb, 30, false);
-      for (let i = 0; i < this.subs.length; i++) {
-        if (this.subs[i]._id == this.mashes[index].subjecta._id) {
-          this.subs[i].point = eloVal[0];
-        }
-        if (this.subs[i]._id == this.mashes[index].subjectb._id) {
-          this.subs[i].point = eloVal[1];
-        }
-      }
+      // this.turn++;
+      // const indexa = this.subs.findIndex(
+      //   subject => subject._id == this.mashes[index].subjecta._id
+      // );
+      // const indexb = this.subs.findIndex(
+      //   subject => subject._id == this.mashes[index].subjectb._id
+      // );
+      // var eloVal = eloRating(
+      //   this.subs[indexa].point,
+      //   this.subs[indexb].point,
+      //   30,
+      //   false
+      // );
+      // this.subs[indexa].point = eloVal[0];
+      // this.subs[indexb].point = eloVal[1];
+      this.selectBn(index);
     }
   }
 };
 </script>
 <style>
-.ranking {
+.content {
   text-align: center;
 }
 .slide-fade-enter-active {

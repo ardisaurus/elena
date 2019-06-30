@@ -48,6 +48,9 @@ export default {
 };
 </script>
 <style scoped>
+table {
+  margin: 0 auto;
+}
 .v-enter {
   opacity: 0;
 }

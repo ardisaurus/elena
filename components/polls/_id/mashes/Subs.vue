@@ -1,10 +1,8 @@
 <template>
-  <div class="ranking">
+  <div>
     <div v-bind:key="orderedSub._id" v-for="orderedSub in orderedSubs">
-      <p>
-        <img v-bind:src="getImgUrl(orderedSub.images)">
-        {{orderedSub.subjectName}}
-      </p>
+      <img v-bind:src="getImgUrl(orderedSub.images)">
+      <p>{{orderedSub.subjectName}}</p>
     </div>
   </div>
 </template>
@@ -12,6 +10,7 @@
 <script>
 export default {
   name: "Subs",
+  props: ["orderedSubs"],
   methods: {
     getImgUrl(pic) {
       if (pic.length < 1) {
@@ -20,8 +19,7 @@ export default {
         return require(`../../../../server/uploads/${pic}`);
       }
     }
-  },
-  props: ["orderedSubs"]
+  }
 };
 </script>
 

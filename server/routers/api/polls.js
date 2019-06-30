@@ -27,7 +27,6 @@ Router.get("/subject/mashes/:id", function(req, res, next) {
   Poll.findById(req.params.id, function(err, poll) {
     if (!poll) res.status(404).send("Data is not found");
     else {
-      // poll.subject = poll.subject.map(obj => ({ ...obj, point: 1 }));
       let mashes = [];
       let a = 0;
       let b = a + 1;
