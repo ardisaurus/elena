@@ -40,6 +40,13 @@ Router.get("/subject/mashes/:id", function(req, res, next) {
         }
         b = b + 1;
       }
+      //Ramdomize it
+      for (var i = mashes.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = mashes[i];
+        mashes[i] = mashes[j];
+        mashes[j] = temp;
+      }
       res.json(mashes);
     }
   });

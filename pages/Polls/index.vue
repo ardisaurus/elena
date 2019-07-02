@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Polls</h3>
+    <h1 class="tabletitle">Polls</h1>
     <Addpoll/>
     <Polls/>
   </div>
@@ -24,5 +24,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.tabletitle {
+  text-align: center;
+  margin-bottom: 1rem;
+}
 </style>

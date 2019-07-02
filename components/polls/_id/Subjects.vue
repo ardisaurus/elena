@@ -1,6 +1,5 @@
 <template>
   <div>
-    <nuxt-link :to="`${$route.params.id}/mash`">Mash</nuxt-link>
     <table>
       <thead>
         <tr>

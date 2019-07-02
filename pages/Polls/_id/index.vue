@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Subjects</h3>
+    <h1 class="tabletitle">Subjects</h1>
     <AddSubject/>
     <Subjects/>
   </div>
@@ -14,5 +14,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.tabletitle {
+  text-align: center;
+  margin-bottom: 1rem;
+}
 </style>

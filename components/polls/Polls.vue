@@ -18,7 +18,8 @@
           <td v-if="poll._id!=markedId">
             <button @click="deletePoll(poll._id)">Delete</button>
             <button @click="marking(poll._id, poll.pollName)">Edit</button>
-            <nuxt-link :to="'polls/'+poll._id">Subject</nuxt-link>
+            <nuxt-link :to="'polls/'+poll._id" class="btn">Subject</nuxt-link>
+            <nuxt-link :to="`polls/${poll._id}/mash`" class="btn">Mash</nuxt-link>
           </td>
           <td v-if="poll._id==markedId">
             <button @click="update">Save</button>
@@ -108,5 +109,12 @@ td {
   text-align: left;
   padding: 20px;
   font-weight: 300;
+}
+.btn {
+  background-color: #41b883;
+  border-radius: 5px;
+  color: white;
+  padding: 0.5em;
+  text-decoration: none;
 }
 </style>
