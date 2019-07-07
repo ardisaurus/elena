@@ -287,7 +287,7 @@ Router.use((err, req, res, next) => {
     return;
   }
 });
-//Saved result
+//Saved mash result
 Router.get("/rank/:id", function(req, res, next) {
   Poll.findById(req.params.id, function(err, poll) {
     if (!poll) res.status(404).send("Data is not found");
@@ -308,6 +308,22 @@ Router.post("/rank/:id", function(req, res, next) {
           res.status(200).send("Saved to database");
         })
         .catch(() => res.status(400).send("Unable to save to database"));
+    }
+  });
+});
+Router.delete("/rank/:id", function(req, res, next) {
+  Poll.findById(req.params.id, function(err, poll) {
+    if (!poll) res.status(404).send("Data is not found");
+    else {
+      if (poll.rank.length > 0) {
+        poll.rank = [];
+        poll
+          .save()
+          .then(function() {
+            res.status(200).send("Clered");
+          })
+          .catch(() => res.status(400).send("Unable to save database"));
+      }
     }
   });
 });

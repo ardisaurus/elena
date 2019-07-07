@@ -41,18 +41,42 @@ export default {
       subs: "mash/subs",
       mashes: "mash/mashes",
       turn: "mash/turn"
-    })
+    }),
+    orderedSubs: function() {
+      return this.subs.slice().sort(function(a, b) {
+        return b.point - a.point;
+      });
+    }
   },
   methods: {
     ...mapActions({
       selectAn: "mash/selectA",
-      selectBn: "mash/selectB"
+      selectBn: "mash/selectB",
+      saveResult: "mash/saveResult"
     }),
     selectA(index) {
       this.selectAn(index);
+      if (this.turn == this.mashes.length) {
+        for (let index = 0; index < this.orderedSubs.length; index++) {
+          let payload = {
+            pollId: this.$route.params.id,
+            subs: { ...this.orderedSubs[index], subjectRank: index }
+          };
+          this.saveResult(payload);
+        }
+      }
     },
     selectB(index) {
       this.selectBn(index);
+      if (this.turn == this.mashes.length) {
+        for (let index = 0; index < this.orderedSubs.length; index++) {
+          let payload = {
+            pollId: this.$route.params.id,
+            subs: { ...this.orderedSubs[index], subjectRank: index }
+          };
+          this.saveResult(payload);
+        }
+      }
     },
     getImgUrl(pic) {
       if (pic.length < 1) {

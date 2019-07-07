@@ -36,13 +36,15 @@ export default {
       }
     },
     async onSubmit() {
+      const host = process.env.HOST || "127.0.0.1";
+      const port = process.env.PORT || 3000;
       const formData = new FormData();
       formData.append("file", this.file);
       formData.append("subjectId", this.subject._id);
       formData.append("pollsId", this.$route.params.id);
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/polls/upload/",
+          `http://${host}:${port}/api/polls/upload/`,
           formData
         );
         this.message = "Upload Success";

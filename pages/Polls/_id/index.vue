@@ -10,7 +10,17 @@
 import Subjects from "../../../components/polls/_id/Subjects";
 import AddSubject from "../../../components/polls/_id/Addsubject";
 export default {
-  components: { Subjects, AddSubject }
+  components: { Subjects, AddSubject },
+  head() {
+    return {
+      title: "Subjects",
+      meta: {
+        hid: "description",
+        name: "description",
+        content: "hayooo"
+      }
+    };
+  }
 };
 </script>
 

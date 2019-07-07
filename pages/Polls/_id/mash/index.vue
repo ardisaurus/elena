@@ -17,8 +17,19 @@ export default {
     Mashes,
     Subs
   },
+  head() {
+    return {
+      title: "Mash it up",
+      meta: {
+        hid: "description",
+        name: "description",
+        content: "hayooo"
+      }
+    };
+  },
   created() {
     this.resetTurn();
+    this.checkRank(this.$route.params.id);
     this.fetchSubs(this.$route.params.id);
     this.fetchMashes(this.$route.params.id);
   },
@@ -26,7 +37,8 @@ export default {
     ...mapActions({
       fetchSubs: "mash/fetchSubs",
       fetchMashes: "mash/fetchMashes",
-      resetTurn: "mash/resetTurn"
+      resetTurn: "mash/resetTurn",
+      checkRank: "mash/checkRank"
     })
   }
 };

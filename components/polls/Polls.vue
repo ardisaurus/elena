@@ -117,4 +117,11 @@ td {
   padding: 0.5em;
   text-decoration: none;
 }
+.btn:hover {
+  background-color: #055e36;
+  border-radius: 5px;
+  color: white;
+  padding: 0.5em;
+  text-decoration: none;
+}
 </style>

@@ -23,6 +23,7 @@ var eloRating = function(Ra, Rb, K, d) {
 export const state = () => ({
   mashes: [],
   subs: [],
+  rank: [],
   turn: 0
 });
 
@@ -33,6 +34,9 @@ export const getters = {
   subs(state) {
     return state.subs;
   },
+  rank(state) {
+    return state.rank;
+  },
   turn(state) {
     return state.turn;
   }
@@ -41,6 +45,20 @@ export const getters = {
 export const actions = {
   async resetTurn({ commit }) {
     commit("resetTurn");
+  },
+  async checkRank({ commit }, id) {
+    const response = await axios.get(
+      `http://${host}:${port}/api/polls/rank/${id}`
+    );
+    if (response.data.length > 0) {
+      commit("fullRank", response.data.length);
+    }
+  },
+  async fetchRank({ commit }, id) {
+    const response = await axios.get(
+      `http://${host}:${port}/api/polls/rank/${id}`
+    );
+    commit("setRank", response.data);
   },
   async fetchSubs({ commit }, id) {
     const response = await axios.get(
@@ -85,12 +103,28 @@ export const actions = {
     );
     let payload = { indexa, indexb, eloVal };
     commit("updatePoints", payload);
+  },
+  async saveResult({ commit }, payload) {
+    await axios.post(
+      `http://${host}:${port}/api/polls/rank/${payload.pollId}`,
+      {
+        subjectName: payload.subs.subjectName,
+        images: payload.subs.images,
+        subjectRank: payload.subs.subjectRank,
+        description: payload.subs.description
+      }
+    );
+  },
+  async resetRank({ commit }, payload) {
+    await axios.delete(`http://${host}:${port}/api/polls/rank/${payload}`);
   }
 };
 
 export const mutations = {
   resetTurn: state => (state.turn = 0),
+  fullRank: (state, length) => (state.turn = length),
   setSubs: (state, subs) => (state.subs = subs),
+  setRank: (state, rank) => (state.rank = rank),
   setMashes: (state, mashes) => (state.mashes = mashes),
   updatePoints: (state, payload) => {
     state.turn++;
