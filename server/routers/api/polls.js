@@ -287,4 +287,28 @@ Router.use((err, req, res, next) => {
     return;
   }
 });
+//Saved result
+Router.get("/rank/:id", function(req, res, next) {
+  Poll.findById(req.params.id, function(err, poll) {
+    if (!poll) res.status(404).send("Data is not found");
+    else {
+      res.json(poll.rank);
+    }
+  });
+});
+
+Router.post("/rank/:id", function(req, res, next) {
+  Poll.findById(req.params.id, function(err, poll) {
+    if (!poll) res.status(404).send("Data is not found");
+    else {
+      poll.rank.push(req.body);
+      poll
+        .save()
+        .then(function() {
+          res.status(200).send("Saved to database");
+        })
+        .catch(() => res.status(400).send("Unable to save to database"));
+    }
+  });
+});
 module.exports = Router;

@@ -39,15 +39,18 @@ export const getters = {
 };
 
 export const actions = {
+  async resetTurn({ commit }) {
+    commit("resetTurn");
+  },
   async fetchSubs({ commit }, id) {
     const response = await axios.get(
-      `http://127.0.0.1:3000/api/polls/subject/${id}`
+      `http://${host}:${port}/api/polls/subject/${id}`
     );
     commit("setSubs", response.data.map(obj => ({ ...obj, point: 1400 })));
   },
   async fetchMashes({ commit }, id) {
     const response = await axios.get(
-      `http://127.0.0.1:3000/api/polls/subject/mashes/${id}`
+      `http://${host}:${port}/api/polls/subject/mashes/${id}`
     );
     commit("setMashes", response.data);
   },
@@ -86,6 +89,7 @@ export const actions = {
 };
 
 export const mutations = {
+  resetTurn: state => (state.turn = 0),
   setSubs: (state, subs) => (state.subs = subs),
   setMashes: (state, mashes) => (state.mashes = mashes),
   updatePoints: (state, payload) => {

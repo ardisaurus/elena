@@ -5,10 +5,17 @@ const subjectSchema = new Schema({
   images: String,
   description: String
 });
+const rankSchema = new Schema({
+  subjectName: String,
+  images: String,
+  subjectRank: Number,
+  description: String
+});
 let pollSchema = new Schema(
   {
     pollName: { type: String },
-    subject: [subjectSchema]
+    subject: [subjectSchema],
+    rank: [rankSchema]
   },
   {
     collection: "myPoll"

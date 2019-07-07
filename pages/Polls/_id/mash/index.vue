@@ -18,13 +18,15 @@ export default {
     Subs
   },
   created() {
+    this.resetTurn();
     this.fetchSubs(this.$route.params.id);
     this.fetchMashes(this.$route.params.id);
   },
   methods: {
     ...mapActions({
       fetchSubs: "mash/fetchSubs",
-      fetchMashes: "mash/fetchMashes"
+      fetchMashes: "mash/fetchMashes",
+      resetTurn: "mash/resetTurn"
     })
   }
 };

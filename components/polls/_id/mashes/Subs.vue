@@ -1,8 +1,10 @@
 <template>
-  <div v-if="turn==mashes.length && mashes.length!=0">
-    <div v-bind:key="orderedSub._id" v-for="orderedSub in orderedSubs">
-      <img v-bind:src="getImgUrl(orderedSub.images)">
-      <p>{{orderedSub.subjectName}}</p>
+  <div>
+    <div v-if="turn==mashes.length && mashes.length!=0">
+      <div v-bind:key="orderedSub._id" v-for="orderedSub in orderedSubs">
+        <img v-bind:src="getImgUrl(orderedSub.images)">
+        <p>{{orderedSub.subjectName}}</p>
+      </div>
     </div>
   </div>
 </template>
