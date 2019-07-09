@@ -82,3 +82,6 @@ dist
 
 # Service worker
 sw.*
+
+#uploads folder content
+/server/uploads/*

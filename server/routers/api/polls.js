@@ -70,6 +70,9 @@ Router.post("/subject/:id", function(req, res, next) {
   Poll.findById(req.params.id, function(err, poll) {
     if (!poll) res.status(404).send("Data is not found");
     else {
+      if (poll.rank.length > 0) {
+        poll.rank = [];
+      }
       poll.subject.push({ ...req.body, images: "" });
       poll
         .save()
@@ -96,6 +99,9 @@ Router.put("/subject/:id/put/:id2", function(req, res, next) {
   Poll.findById(req.params.id, function(err, poll) {
     if (!poll) res.status(404).send("Data is not found");
     else {
+      if (poll.rank.length > 0) {
+        poll.rank = [];
+      }
       const index = poll.subject.findIndex(
         subject => subject._id == req.params.id2
       );
@@ -174,6 +180,9 @@ Router.delete("/subject/:id/delete/:id2", function(req, res, next) {
   Poll.findById(req.params.id, async function(err, poll) {
     if (!poll) res.status(404).send("Data is not found");
     else {
+      if (poll.rank.length > 0) {
+        poll.rank = [];
+      }
       const index = poll.subject.findIndex(
         subject => subject._id == req.params.id2
       );
