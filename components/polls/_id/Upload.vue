@@ -31,8 +31,8 @@ export default {
       if (!allowedTypes.includes(file.type)) {
         this.message = "Filetype is wrong!!";
       }
-      if (file.size > 500000) {
-        this.message = "Too large, max size allowed is 500kb";
+      if (file.size > 2000000) {
+        this.message = "Too large, max size allowed is 2MB";
       }
     },
     async onSubmit() {

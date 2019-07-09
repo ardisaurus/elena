@@ -85,4 +85,4 @@ sw.*
 
 #uploads folder content
 server/uploads/*
-!server/uploads/README.md
+!server/uploads/.readme

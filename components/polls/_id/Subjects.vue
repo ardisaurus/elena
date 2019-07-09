@@ -90,6 +90,7 @@ export default {
         this.subjectName = "";
         this.images = "";
         this.description = "";
+        this.fetchSubjects(this.$route.params.id);
       } else {
         this.markedId = _id;
         this.subjectName = name;

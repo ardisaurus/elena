@@ -87,7 +87,16 @@ Router.put("/:id", function(req, res, next) {
   Poll.findById(req.params.id, function(err, poll) {
     if (!poll) res.status(404).send("Data is not found");
     else {
-      Poll.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
+      Poll.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          _id: req.params.id,
+          pollName: req.body.pollName,
+          rank: poll.rank,
+          subject: poll.subject
+        },
+        { new: true }
+      )
         .then(result => {
           res.json(result);
         })
