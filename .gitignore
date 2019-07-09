@@ -84,4 +84,5 @@ dist
 sw.*
 
 #uploads folder content
-/server/uploads/*
+server/uploads/*
+!server/uploads/README.md
