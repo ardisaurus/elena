@@ -23,6 +23,14 @@ Router.get("/subject/:id", function(req, res, next) {
     }
   });
 });
+Router.get("/check/:id", function(req, res, next) {
+  Poll.findById(req.params.id, function(err, poll) {
+    if (!poll) res.json({ status: false });
+    else {
+      res.json({ status: true });
+    }
+  });
+});
 Router.get("/subject/mashes/:id", function(req, res, next) {
   Poll.findById(req.params.id, function(err, poll) {
     if (!poll) res.status(404).send("Data is not found");

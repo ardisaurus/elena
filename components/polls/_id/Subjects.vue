@@ -58,6 +58,7 @@
 <script>
 import FileUpload from "../../polls/_id/Upload";
 import { mapActions, mapGetters } from "vuex";
+import axios from "axios";
 export default {
   name: "Subjects",
   components: {
@@ -150,8 +151,17 @@ export default {
       this.description = "";
     }
   },
-  created() {
-    this.fetchSubjects(this.$route.params.id);
+  async created() {
+    const host = process.env.HOST || "127.0.0.1";
+    const port = process.env.PORT || 3000;
+    const response = await axios.get(
+      `http://${host}:${port}/api/polls/check/${this.$route.params.id}`
+    );
+    if (response.data.status) {
+      this.fetchSubjects(this.$route.params.id);
+    } else {
+      this.$router.push({ path: "/polls" });
+    }
   }
 };
 </script>

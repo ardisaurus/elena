@@ -1,2 +1,0 @@
-save mash result
-add id check on open subject and mash 

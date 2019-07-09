@@ -10,6 +10,7 @@
 <script>
 import Mashes from "../../../../components/polls/_id/mashes/Mashes";
 import Subs from "../../../../components/polls/_id/mashes/Subs";
+import axios from "axios";
 import { mapActions } from "vuex";
 export default {
   name: "App",
@@ -27,11 +28,20 @@ export default {
       }
     };
   },
-  created() {
-    this.resetTurn();
-    this.checkRank(this.$route.params.id);
-    this.fetchSubs(this.$route.params.id);
-    this.fetchMashes(this.$route.params.id);
+  async created() {
+    const host = process.env.HOST || "127.0.0.1";
+    const port = process.env.PORT || 3000;
+    const response = await axios.get(
+      `http://${host}:${port}/api/polls/check/${this.$route.params.id}`
+    );
+    if (response.data.status) {
+      this.resetTurn();
+      this.checkRank(this.$route.params.id);
+      this.fetchSubs(this.$route.params.id);
+      this.fetchMashes(this.$route.params.id);
+    } else {
+      this.$router.push({ path: "/polls" });
+    }
   },
   methods: {
     ...mapActions({
