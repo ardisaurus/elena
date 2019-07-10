@@ -196,21 +196,22 @@ Router.delete("/subject/:id/delete/:id2", function(req, res, next) {
         subject => subject._id == req.params.id2
       );
       if (index !== -1) {
-        if (poll.subject[index].images != "") {
-          await unlinkAsync("server/uploads/" + poll.subject[index].images);
+        let pic = poll.subject[index].images;
+        poll.subject = poll.subject.filter(
+          subject => subject._id != req.params.id2
+        );
+        poll
+          .save()
+          .then(function(result) {
+            res.json(result);
+          })
+          .catch(() => res.status(400).send("Unable delete data"));
+        if (pic != "") {
+          await unlinkAsync("server/uploads/" + pic);
         }
       } else {
         res.status(400).send("Unable to update data");
       }
-      poll.subject = poll.subject.filter(
-        subject => subject._id != req.params.id2
-      );
-      poll
-        .save()
-        .then(function(result) {
-          res.json(result);
-        })
-        .catch(() => res.status(400).send("Unable delete data"));
     }
   });
 });

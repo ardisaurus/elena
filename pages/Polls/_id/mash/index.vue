@@ -37,8 +37,8 @@ export default {
     if (response.data.status) {
       this.resetTurn();
       this.checkRank(this.$route.params.id);
-      this.fetchSubs(this.$route.params.id);
       this.fetchMashes(this.$route.params.id);
+      this.fetchSubs(this.$route.params.id);
     } else {
       this.$router.push({ path: "/polls" });
     }
